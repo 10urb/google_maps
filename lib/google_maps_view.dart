@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleMapsView extends StatefulWidget {
-  GoogleMapsView({Key? key}) : super(key: key);
+  const GoogleMapsView({Key? key}) : super(key: key);
 
   @override
   State<GoogleMapsView> createState() => _GoogleMapsViewState();
 }
 
 class _GoogleMapsViewState extends State<GoogleMapsView> {
-  static final CameraPosition _position = CameraPosition(
+  static const CameraPosition _position = CameraPosition(
       bearing: 192.8334901395799,
       target: LatLng(41.6176025, 32.3478626),
       tilt: 59.440717697143555,
@@ -20,25 +20,28 @@ class _GoogleMapsViewState extends State<GoogleMapsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.small(
+        backgroundColor: Colors.blueGrey,
+        child: const Icon(Icons.location_city_rounded),
         onPressed: () async {
-          await controller.animateCamera(
-              CameraUpdate.newLatLngZoom(const LatLng(20, 25), 3));
+          await controller.animateCamera(CameraUpdate.newLatLngZoom(
+              const LatLng(41.6176025, 32.3478626), 15));
         },
       ),
       body: GoogleMap(
         padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width / 20,
-            vertical: MediaQuery.of(context).size.height / 20),
+            horizontal: MediaQuery.of(context).size.width / 25,
+            vertical: MediaQuery.of(context).size.height / 8),
         mapType: MapType.normal,
-        onTap: (value) => print(value.toString() + "Onurrrrrrr0"),
-        initialCameraPosition: CameraPosition(target: LatLng(12, 13)),
+        // ignore: avoid_print
+        onTap: (value) => print(value),
+        initialCameraPosition: const CameraPosition(target: LatLng(200, 13)),
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         markers: _createMarker(),
         onMapCreated: (map) async {
-          controller=map;
-          // _onMapCreated;
+          controller = map;
+
           await _createMarkerImageFromAsset();
         },
       ),
@@ -60,15 +63,11 @@ class _GoogleMapsViewState extends State<GoogleMapsView> {
   Set<Marker> _createMarker() {
     return <Marker>{
       Marker(
-          markerId: MarkerId("value"),
+          markerId: const MarkerId("id"),
           zIndex: 10,
           position: _position.target,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           visible: true)
     };
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    this.controller = controller;
   }
 }
